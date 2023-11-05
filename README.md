@@ -3,10 +3,10 @@
 This is our IEEE Quarterly Project!
 
 ### Team
-Harry Lonsdale
-Zack Xu
-Samuel Chan
-Peter Chang
+Harry Lonsdale, 
+Zack Xu, 
+Samuel Chan, 
+Peter Chang, 
 Woojin Rho
 
 ### Description
