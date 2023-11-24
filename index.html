@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Flipper</title>
+    <style>
+        body {
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1{
+            text-align: center;
+        }
+        #pdf-container {
+            text-align: center;
+        }
+
+        #content-container {
+            display:flex;
+        }
+
+        #pdf-container embed {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        #audio-container {
+            margin-top: 20px; /* Adjust as needed */
+            margin-left: 20px;
+            text-align: center;
+            display:flex;
+            flex-direction: column;
+        }
+        #buttons-container {
+            display:flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>IEEE Quarterly Project: Team 22</h1>
+    <div id="content-container">
+    <div id="pdf-container">
+        <embed
+    src="Sheet-Music-Examples.pdf"
+    type="application/pdf"
+    frameBorder="0"
+    scrolling="auto"
+    height="800px"
+    width="800px"
+></embed>
+    </div>
+
+    <div id="audio-container">
+        <audio id="audio-player" controls></audio>
+        <div id="#buttons-container">
+        <button id="start-recording">Start Recording</button>
+        <button id="stop-recording" disabled>Stop Recording</button>
+    </div>
+</div>
+</div>
+
+<script>
+    let audioChunks = [];
+    let mediaRecorder;
+
+    const startRecording = () => {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = event => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    document.getElementById('audio-player').src = audioUrl;
+                };
+
+                mediaRecorder.start();
+                document.getElementById('start-recording').disabled = true;
+                document.getElementById('stop-recording').disabled = false;
+            })
+            .catch(error => console.error('Error accessing microphone:', error));
+    };
+
+    const stopRecording = () => {
+        mediaRecorder.stop();
+        document.getElementById('start-recording').disabled = false;
+        document.getElementById('stop-recording').disabled = true;
+    };
+
+    document.getElementById('start-recording').addEventListener('click', startRecording);
+    document.getElementById('stop-recording').addEventListener('click', stopRecording);
+</script>
+
+</body>
+</html>
